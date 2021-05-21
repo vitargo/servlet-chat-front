@@ -1,0 +1,216 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    font-size: 13px;
+    outline: 0;
+}
+body {
+    background: url('./bg.jpeg');
+}
+
+.error {
+    color: #F04823;
+    font-size: 12px;
+}
+
+input[type="text"],
+input[type="password"] {
+    border-radius: 20px;
+    padding: 10px;
+    border: 2px solid gainsboro;
+}
+
+button {
+    border-radius: 20px;
+    padding: 10px;
+    background-color: rgba(255, 105, 180, 0.93);
+    color: #fff;
+    width: 13em;
+    border: 2px solid #ff69b4;
+}
+
+button:hover,
+button:focus {
+    background-color: #ff1493;
+    border-color: #ff1493;
+    cursor: pointer;
+}
+
+button2 {
+    border-radius: 20px;
+    padding: 10px;
+    color: #fff;
+    width: 13em;
+    background-color:grey;
+    border: 2px solid grey;
+}
+
+button2:hover,
+button2:focus {
+    background-color: darkgrey;
+    border-color: darkgray;
+    cursor: pointer;
+}
+
+/* Authentication */
+
+#authentication {
+    margin-top: 100px;
+}
+
+#authentication * {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+#authentication .error {
+    text-align: center;
+}
+
+/* Registration */
+
+#registration {
+    margin-top: 100px;
+}
+
+#registration * {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+#registration .error {
+    text-align: center;
+}
+
+/* Title Bar */
+
+#title {
+    background-color: #ff69b4;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    color: #fff;
+}
+
+/* Contact list */
+
+#contacts {
+    float: left;
+    width: 120px;
+    padding: 20px;
+    background-color: aliceblue;
+    min-height: calc(100vh - 85px);
+    max-height: calc(100vh - 85px);
+    display: none;
+}
+
+#contacts .contact .status {
+    background-color: #13CF13;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#contacts .contact .name {
+    line-height: 40px;
+    vertical-align: super;
+}
+
+/* Chat */
+
+#chat {
+    float: right;
+    width: calc(100% - 160px);
+    display: none;
+}
+
+
+#messages {
+    min-height: calc(100vh - 130px);
+    max-height: calc(100vh - 130px);
+    padding: 20px 20px 0 20px;
+    overflow-y: auto;
+}
+
+#messages .message {
+    margin-bottom: 3px;
+}
+
+#messages .message .content {
+    min-width: 20px;
+    max-width: 250px;
+    border-radius: 20px;
+    padding: 10px;
+    display: table;
+}
+
+#messages .message.event .content {
+    background-color: #FF7E29;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 10px;
+    padding: 7px;
+}
+
+#messages .message.received {
+    left: 0;
+    text-align: left;
+}
+
+#messages .message.received .content {
+    background-color: gainsboro;
+    border-radius: 0 20px 20px;
+}
+
+#messages .message.received .sender {
+    color: dimgrey;
+    font-size: 10px;
+}
+
+#messages .message.sent {
+    right: 0;
+    text-align: right;
+}
+
+#messages .message.sent .content {
+    background-color: #ff69b4;
+    margin-left: auto;
+    margin-right: 0;
+    color: #fff;
+    text-align: right;
+    border-radius: 20px 0 20px 20px;
+}
+
+#messages .message.sent .sender {
+    color: #ff1493;
+    font-size: 10px;
+}
+
+#chat-controls {
+    height: 40px;
+    padding: 20px 20px 0 20px;
+}
+
+#chat-controls button {
+    float: right;
+}
+
+#chat-controls input[type="text"] {
+    width: calc(75%);
+}
+
+#messages .message.sent.same-sender-previous-message .sender,
+#messages .message.received.same-sender-previous-message .sender {
+    display: none;
+}
+
+#messages .message:not(.same-sender-previous-message) {
+    margin-top: 10px;
+}
