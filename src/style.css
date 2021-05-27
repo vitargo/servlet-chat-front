@@ -1,216 +1,104 @@
-* {
+body{
+    text-align: center;
     margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    font-size: 13px;
-    outline: 0;
-}
-body {
-    background: url('./bg.jpeg');
+    background-image: url("img/auth_bg.png");
+    background-size: cover;
 }
 
-.error {
-    color: #F04823;
-    font-size: 12px;
+div{
+    text-align: inherit;
+    vertical-align: central;
+    display: contents;
 }
 
-input[type="text"],
-input[type="password"] {
-    border-radius: 20px;
-    padding: 10px;
-    border: 2px solid gainsboro;
-}
-
-button {
-    border-radius: 20px;
-    padding: 10px;
-    background-color: rgba(255, 105, 180, 0.93);
-    color: #fff;
-    width: 13em;
-    border: 2px solid #ff69b4;
-}
-
-button:hover,
-button:focus {
-    background-color: #ff1493;
-    border-color: #ff1493;
-    cursor: pointer;
-}
-
-button2 {
-    border-radius: 20px;
-    padding: 10px;
-    color: #fff;
-    width: 13em;
-    background-color:grey;
-    border: 2px solid grey;
-}
-
-button2:hover,
-button2:focus {
-    background-color: darkgrey;
-    border-color: darkgray;
-    cursor: pointer;
-}
-
-/* Authentication */
-
-#authentication {
-    margin-top: 100px;
-}
-
-#authentication * {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-}
-
-#authentication .error {
+#root{
+    height: 100%;
+    width: 100%;
+    position: absolute;
     text-align: center;
-}
-
-/* Registration */
-
-#registration {
-    margin-top: 100px;
-}
-
-#registration * {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-}
-
-#registration .error {
-    text-align: center;
-}
-
-/* Title Bar */
-
-#title {
-    background-color: #ff69b4;
-    font-size: 20px;
-    padding: 10px 20px 10px 20px;
-    color: #fff;
-}
-
-/* Contact list */
-
-#contacts {
-    float: left;
-    width: 120px;
-    padding: 20px;
-    background-color: aliceblue;
-    min-height: calc(100vh - 85px);
-    max-height: calc(100vh - 85px);
-    display: none;
-}
-
-#contacts .contact .status {
-    background-color: #13CF13;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 10px;
-}
-
-#contacts .contact .name {
-    line-height: 40px;
-    vertical-align: super;
-}
-
-/* Chat */
-
-#chat {
-    float: right;
-    width: calc(100% - 160px);
-    display: none;
-}
-
-
-#messages {
-    min-height: calc(100vh - 130px);
-    max-height: calc(100vh - 130px);
-    padding: 20px 20px 0 20px;
-    overflow-y: auto;
-}
-
-#messages .message {
-    margin-bottom: 3px;
-}
-
-#messages .message .content {
-    min-width: 20px;
-    max-width: 250px;
-    border-radius: 20px;
-    padding: 10px;
     display: table;
+    margin: 0;
 }
 
-#messages .message.event .content {
-    background-color: #FF7E29;
-    color: #fff;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 10px;
-    padding: 7px;
-}
-
-#messages .message.received {
-    left: 0;
+.logo_container {
+    background: linear-gradient(#5d2b5e, #b14670);
+    height: 40px;
+    position: relative;
+    display: table-caption;
+    margin: 0;
     text-align: left;
 }
 
-#messages .message.received .content {
-    background-color: gainsboro;
-    border-radius: 0 20px 20px;
+img {
+    height: 45px;
+    text-align: left;
 }
 
-#messages .message.received .sender {
-    color: dimgrey;
-    font-size: 10px;
+span {
+    margin: 0;
+    padding: 0;
+    position: absolute;
 }
 
-#messages .message.sent {
-    right: 0;
-    text-align: right;
+h1 {
+    color: #d9aec4;
+    position: relative;
+    display: initial;
+    padding-left: 15px;
+    font-family: "Al Nile", sans-serif;
+    margin: 0;
 }
 
-#messages .message.sent .content {
-    background-color: #ff69b4;
-    margin-left: auto;
-    margin-right: 0;
-    color: #fff;
-    text-align: right;
-    border-radius: 20px 0 20px 20px;
+.form{
+    height: 500px;
+    width: 900px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
 }
 
-#messages .message.sent .sender {
-    color: #ff1493;
-    font-size: 10px;
+.form__input {
+    color: #d9aec4;
+    height: 30px;
+    width: 200px;
+    margin: 25px auto 0 auto;
+    border-radius: 20px;
+    border: 2px solid #394c61;
+    background-color: #394c61;
+    font-family: "Al Nile", sans-serif;
+    padding-left: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+
 }
 
-#chat-controls {
-    height: 40px;
-    padding: 20px 20px 0 20px;
+.form__btn{
+    font-family: "Al Nile", sans-serif;
+    font-size: inherit;
+    background-color: #b44a72;
+    border: 2px solid #d9aec4;
+    height: 38px;
+    width: 210px;
+    margin: 25px auto 0 auto;
+    border-radius: 20px;
+    color: #d9aec4;
 }
 
-#chat-controls button {
-    float: right;
+.focused {
+    border: red;
+    background-color: #394c61;
 }
 
-#chat-controls input[type="text"] {
-    width: calc(75%);
-}
-
-#messages .message.sent.same-sender-previous-message .sender,
-#messages .message.received.same-sender-previous-message .sender {
+.error{
+    color: rgba(255, 0, 0, 0.84);
+    height: auto;
+    width: 200px;
     display: none;
-}
-
-#messages .message:not(.same-sender-previous-message) {
-    margin-top: 10px;
+    margin: 0 auto;
+    overflow: auto;
+    font-family: "Al Nile", sans-serif;
+    font-size: small;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
