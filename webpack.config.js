@@ -1,7 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const DirectoryNamedWebpackPlugin = require("directory-named-webpack-plugin");
 
 
@@ -11,90 +11,49 @@ module.exports = {
     },
     mode: 'development',
     devtool: 'inline-source-map',
-    devServer: {
-        historyApiFallback: true,
-        contentBase: path.resolve(__dirname, './dist'),
-        open: true,
-        compress: true,
-        hot: true,
-        port: 8080,
-    },
+
     plugins: [
-        new MiniCssExtractPlugin(
-    //         {
-    //     filename: "[name].css"
-    // }
-    ),
+        new MiniCssExtractPlugin({filename: "[name].css"}),
         new HtmlWebpackPlugin({
             filename: 'index.html',
+            inject: false,
             template: path.resolve(__dirname, './src/auth.html'),
         }),
-        // new CleanWebpackPlugin(),
+        new CleanWebpackPlugin(),
     ],
     output: {
-        path: path.resolve(__dirname, './dist'),
         filename: '[name].bundle.js',
+        path: path.join(__dirname, './deploy'),
+        publicPath: '/'
+    },
+
+    devServer: {
+        //publicPath: "/assets/",
+        contentBase: path.resolve(__dirname, './deploy'),
+        open: true,
+        compress: true,
+        port: 3000,
     },
     module: {
         rules: [
             {
-                test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                test: /\.css$/,
+                use: ["style-loader", "css-loader"]
             },
-            // {
-            //     test: /\.css$/,
-            //     use: [
-            //         'style-loader',
-            //         {
-            //             loader: 'css-loader',
-            //             options: {
-            //                 importLoaders: 1,
-            //                 modules: true
-            //             }
-            //         }
-            //     ],
-            //     // include: /\.module\.css$/
-            // },
-            // { test: /\.txt$/, use: 'raw-loader' },
-
-
-            // {
-            //     test: /\.css$/,
-            //     use: [
-            //         'style-loader',
-            //         'css-loader',
-            //     ]
-            // },
             {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                    },
-                ],
+                test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+                type: 'asset/resource',
             },
-            // {
-            //     test: /\.js$/,
-            //     exclude: /node_modules/,
-            //     use: ['babel-loader'],
-            // },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            },
         ],
-    },
-    resolveLoader: {
-        modules: [
-            path.join(__dirname, 'node_modules')
-        ]
-    },
-    resolve: {
-        descriptionFiles: ['package.json'],
-        enforceExtension: false,
-        aliasFields: ['browser'],
-        mainFiles: ['index'],
-        modules: [
-            path.join(__dirname, 'node_modules')
-        ],
-        plugins: [new DirectoryNamedWebpackPlugin()],
-        preferRelative: true,
-
     },
 };

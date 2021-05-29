@@ -1,12 +1,11 @@
-import './style.css'
-import Icon from 'img/logo.png';
-import axios from "axios";
 
+import Icon from './img/logo.png';
+import './style.css';
+import axios from 'axios';
 
 let socket;
 let currentUser;
 let Token;
-
 
 const root = document.getElementById('root');
 
@@ -109,94 +108,206 @@ div_form_container.appendChild(form);
 
 //login.addEventListener('input', validateLogin);
 // PSW.addEventListener('input', validatePSW);
+
 btn.addEventListener('click', signIn);
 
 function signIn() {
     let login = document.forms['AuthForm']['login'].value;
     let password = document.forms['AuthForm']['password'].value;
-    let xhr = new XMLHttpRequest();
-    let url = "http://localhost:8082/chat/auth";
-    // window.location.href;
-    // url = window.location.replace("http://localhost:8082/chat/auth");
-    xhr.open("POST", url);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            switch (xhr.status) {
-                case 200:
-                    currentUser = login;
-                    var webSocketAccessToken = xhr.responseText;
-                    Token = webSocketAccessToken.token;
-                    console.log(webSocketAccessToken.token);
-                    openSocket(webSocketAccessToken.token);
-                    break;
-                case 403:
-                    currentUser = null;
-                    document.getElementById("error_login").innerHTML = "Oops... These credentials are invalid.";
-                    break;
-                default:
-                    document.getElementById("error_login").innerHTML = "Oops... Looks like something is broken.";
-            }
-        }
-    };
-
-    let data = JSON.stringify({"login": login, "password": password});
-    xhr.send(data);
+    // let xhr = new XMLHttpRequest();
+    // let url = "http://localhost:8081/chat/auth";
+    // xhr.open("POST", url);
+    // xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.onreadystatechange = function () {
+    //     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    //         switch (xhr.status) {
+    //             case 200:
+    //                 currentUser = login;
+    //                 var webSocketAccessToken = xhr.responseText;
+    //                 Token = webSocketAccessToken.token;
+    //                 console.log(webSocketAccessToken.token);
+    //                 openSocket(webSocketAccessToken.token);
+    //                 break;
+    //             case 403:
+    //                 currentUser = null;
+    //                 document.getElementById("error_login").innerHTML = "Oops... These credentials are invalid.";
+    //                 break;
+    //             default:
+    //                 document.getElementById("error_login").innerHTML = "Oops... Looks like something is broken.";
+    //         }
+    //         }
+    //     };
     //
-    // let s = axios({
-    //     method: 'post',
-    //     url: "http://localhost:8082/chat/auth",
-    //     data: {
-    //         login: login,
-    //         password: password,
-    //     }
-    // })
-    //     .then((response) => {
-    //         console.log(response);
-    //     }, (error) => {
-    //         console.log(error);
-    //     });
+    //     let data = JSON.stringify({"login": login, "password": password});
+    //     xhr.send(data);
+
+        axios({
+            method: 'post',
+            url: "http://localhost:8081/chat/auth",
+            data: {
+                login: login,
+                password: password,
+            }
+        })
+            .then((response) => {
+                console.log(response);
+            }, (error) => {
+                console.log(error);
+            });
 
 }
 
-function openSocket(accessToken) {
-    let login = document.querySelector('#login');
-    let password = document.querySelector('#password');
-    let xhrs = new XMLHttpRequest();
-    xhrs.open("POST", "http://localhost:8081/chat/auth", true);
-    xhrs.setRequestHeader("Content-Type", "application/json");
-    xhrs.onreadystatechange = function () {
-        if (xhrs.readyState === 4 && xhrs.status === 200) {
-            result.innerHTML = this.responseText;
-            console.log(this.responseText);
+    function openSocket(accessToken) {
+        let login = document.querySelector('#login');
+        let password = document.querySelector('#password');
+        let xhrs = new XMLHttpRequest();
+        xhrs.open("POST", "http://localhost:8081/chat/auth", true);
+        xhrs.setRequestHeader("Content-Type", "application/json");
+        xhrs.onreadystatechange = function () {
+            if (xhrs.readyState === 4 && xhrs.status === 200) {
+                result.innerHTML = this.responseText;
+                console.log(this.responseText);
+            }
+        };
+        var data = JSON.stringify({"login": login.value, "password": password.value});
+        console.log(data);
+        currentUser = login.value;
+        xhrs.send(data);
+        console.log("responseXML" + xhrs.responseXML);
+        console.log("resp  " + xhrs.response.token);
+        console.log("openSocket");
+
+        if (socket) {
+            socket.close();
+        }
+        socket = new WebSocket("ws://localhost:8081/chat");
+        xhrs.onload = function () {
+            var au = JSON.stringify({"topic": "auth", "payload": xhrs.response});
+            console.log(au);
+            socket.send(au);
+        }
+
+        socket.onopen = function (event) {
+            document.getElementById("authentication").style.display = "none";
+            document.getElementById("contacts").style.display = "block";
+            document.getElementById("chat").style.display = "block";
+            document.getElementById("message").focus();
+        };
+
+
+        socket.onmessage = onMessage;
+    }
+    var onMessage = function(event) {
+        var webSocketMessage = JSON.parse(event.data);
+        switch (webSocketMessage.topic) {
+            case "auth":
+                displayConnectedUserMessage(currentUser);
+                break;
+            case "sendTextMessage":
+                displayMessage(currentUser,webSocketMessage.payload);
+                break;
         }
     };
-    var data = JSON.stringify({ "login": login.value, "password": password.value });
-    console.log(data);
-    currentUser = login.value;
-    xhrs.send(data);
-    console.log("responseXML"+xhrs.responseXML);
-    console.log("resp  "+xhrs.response.token);
-    console.log("openSocket");
 
-    if (socket) {
-        socket.close();
+    function sendMessage() {
+
+        var text = document.getElementById("message").value;
+        document.getElementById("message").value = "";
+
+        var payload = text;
+
+        var webSocketMessage = {
+            topic: "sendTextMessage"
+        };
+
+        webSocketMessage.payload = payload;
+
+        socket.send(JSON.stringify(webSocketMessage));
+        socket.onmessage = onMessage;
     }
-    socket = new WebSocket("ws://localhost:8081/chat");
-    xhrs.onload = function () {
-        var au = JSON.stringify({"topic":"auth","payload":xhrs.response});
-        console.log(au);
-        socket.send(au);
+
+    function displayMessage(username, text) {
+
+        var sentByCurrentUer = currentUser === username;
+
+        var message = document.createElement("div");
+        message.setAttribute("class", sentByCurrentUer === true ? "message sent" : "message received");
+        message.dataset.sender = username;
+
+        var sender = document.createElement("span");
+        sender.setAttribute("class", "sender");
+        sender.appendChild(document.createTextNode(sentByCurrentUer === true ? "You" : username));
+        message.appendChild(sender);
+
+        var content = document.createElement("span");
+        content.setAttribute("class", "content");
+        content.appendChild(document.createTextNode(text));
+        message.appendChild(content);
+
+        var messages = document.getElementById("messages");
+        var lastMessage = messages.lastChild;
+        if (lastMessage && lastMessage.dataset.sender && lastMessage.dataset.sender === username) {
+            message.className += " same-sender-previous-message";
+        }
+
+        messages.appendChild(message);
+        messages.scrollTop = messages.scrollHeight;
     }
 
-    socket.onopen = function (event) {
-        document.getElementById("authentication").style.display = "none";
-        document.getElementById("contacts").style.display = "block";
-        document.getElementById("chat").style.display = "block";
-        document.getElementById("message").focus();
-    };
+    function displayConnectedUserMessage(username) {
 
+        var sentByCurrentUer = currentUser === username;
 
-    socket.onmessage = onMessage;
+        var message = document.createElement("div");
+        message.setAttribute("class", "message event");
+
+        var text = sentByCurrentUer === true ? "Welcome " + username : username + " joined the chat";
+        var content = document.createElement("span");
+        content.setAttribute("class", "content");
+        content.appendChild(document.createTextNode(text));
+        message.appendChild(content);
+
+        var messages = document.getElementById("messages");
+        messages.appendChild(message);
+    }
+
+    function displayDisconnectedUserMessage(username) {
+
+        var message = document.createElement("div");
+        message.setAttribute("class", "message event");
+
+        var text = username + " left the chat";
+        var content = document.createElement("span");
+        content.setAttribute("class", "content");
+        content.appendChild(document.createTextNode(text));
+        message.appendChild(content);
+
+        var messages = document.getElementById("messages");
+        messages.appendChild(message);
+    }
+
+    function addAvailableUsers(username) {
+
+        var contact = document.createElement("div");
+        contact.setAttribute("class", "contact");
+
+        var status = document.createElement("div");
+        status.setAttribute("class", "status");
+        contact.appendChild(status);
+
+        var content = document.createElement("span");
+        content.setAttribute("class", "name");
+        content.appendChild(document.createTextNode(username));
+        contact.appendChild(content);
+
+        var contacts = document.getElementById("contacts");
+        contacts.appendChild(contact);
+    }
+
+    function cleanAvailableUsers() {
+        var contacts = document.getElementById("contacts");
+        while (contacts.hasChildNodes()) {
+            contacts.removeChild(contacts.lastChild);
+        }
 }
 
